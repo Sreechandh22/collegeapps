@@ -1,14 +1,22 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 
-function HomePage() {
+function HomePage({ isAuthenticated }) {
+    const navigate = useNavigate();
+
+    const handleGetStarted = () => {
+        if (isAuthenticated) {
+            navigate('/questions');
+        } else {
+            navigate('/signin');
+        }
+    };
+
     return (
         <div className="homepage">
-            <h2>Welcome to College Matcher!</h2>
-            <p>
-                Our tool helps you create a personalized list of U.S. colleges that best match your academic profile, preferences, and career aspirations. 
-                Sign up or sign in to get started on your journey to finding the perfect college for you!
-            </p>
-            <button onClick={() => window.location.href='/signup'}>Get Started</button>
+            <h2>Welcome to College Matcher</h2>
+            <p>Your personalized guide to finding the perfect college.</p>
+            <button onClick={handleGetStarted}>Get Started</button>
         </div>
     );
 }

@@ -8,7 +8,7 @@ import Navbar from './components/Navbar';
 import './styles/styles.css';
 
 function App() {
-    const [theme, setTheme] = useState('light');
+    const [theme, setTheme] = useState('dark');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
 
     const toggleTheme = () => {
@@ -33,10 +33,10 @@ function App() {
                     handleSignOut={handleSignOut}
                 />
                 <Routes>
-                    <Route path="/" element={<HomePage />} />
+                    <Route path="/" element={<HomePage isAuthenticated={isAuthenticated} />} />
                     <Route path="/signup" element={<SignUp onSignIn={handleSignIn} />} />
                     <Route path="/signin" element={<SignIn onSignIn={handleSignIn} />} />
-                    <Route path="/questions" element={<QuestionsPage />} />
+                    {isAuthenticated && <Route path="/questions" element={<QuestionsPage />} />}
                 </Routes>
             </Router>
         </div>
