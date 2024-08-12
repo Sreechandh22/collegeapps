@@ -8,10 +8,7 @@ function Navbar({ toggleTheme, theme, isAuthenticated, handleSignOut }) {
             <ul>
                 <li><Link to="/">Home</Link></li>
                 {!isAuthenticated && (
-                    <>
-                        <li><Link to="/signup">Sign Up</Link></li>
-                        <li><Link to="/signin">Sign In</Link></li>
-                    </>
+                    <li><Link to="/signin">Sign In</Link></li>
                 )}
                 {isAuthenticated && (
                     <li>
