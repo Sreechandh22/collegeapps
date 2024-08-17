@@ -1,16 +1,22 @@
 import React, { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function SignIn({ onSignIn }) {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleSignIn = (e) => {
+    const handleSignIn = async (e) => {
         e.preventDefault();
-        // Perform sign-in logic here (e.g., authentication with backend)
-        onSignIn(); // Update the authentication state in App.js
-        navigate('/questions'); // Redirect to questions page
+        try {
+            const res = await axios.post('http://localhost:5000/api/auth/login', { email, password });
+            onSignIn(res.data.token, res.data.user);
+            navigate('/questions');
+        } catch (err) {
+            console.error(err.response.data.msg);
+            alert(err.response.data.msg);
+        }
     };
 
     return (
@@ -33,7 +39,6 @@ function SignIn({ onSignIn }) {
                 />
                 <button type="submit">Sign In</button>
             </form>
-            <p>Don't have an account? <Link to="/signup">Sign Up</Link></p>
         </div>
     );
 }

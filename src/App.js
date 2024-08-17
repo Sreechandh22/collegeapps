@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SignUp from './components/SignUp';
@@ -10,18 +10,39 @@ import './styles/styles.css';
 function App() {
     const [theme, setTheme] = useState('dark');
     const [isAuthenticated, setIsAuthenticated] = useState(false);
+    const [user, setUser] = useState(null);
 
+    // Toggle between light and dark themes
     const toggleTheme = () => {
         setTheme((prevTheme) => (prevTheme === 'light' ? 'dark' : 'light'));
     };
 
-    const handleSignIn = () => {
+    // Handle user sign-in, store token and user info
+    const handleSignIn = (token, userData) => {
+        localStorage.setItem('token', token);
+        localStorage.setItem('user', JSON.stringify(userData));
         setIsAuthenticated(true);
+        setUser(userData);
     };
 
+    // Handle user sign-out, clear token and user info
     const handleSignOut = () => {
+        localStorage.removeItem('token');
+        localStorage.removeItem('user');
         setIsAuthenticated(false);
+        setUser(null);
     };
+
+    // Load user data from local storage on app initialization
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        const storedUser = localStorage.getItem('user');
+
+        if (token && storedUser) {
+            setIsAuthenticated(true);
+            setUser(JSON.parse(storedUser));
+        }
+    }, []);
 
     return (
         <div className={`app ${theme}`}>
