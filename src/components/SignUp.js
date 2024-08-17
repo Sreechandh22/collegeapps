@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
 
 function SignUp({ onSignIn }) {
     const [firstName, setFirstName] = useState('');
@@ -9,11 +10,30 @@ function SignUp({ onSignIn }) {
     const [password, setPassword] = useState('');
     const navigate = useNavigate();
 
-    const handleSignUp = (e) => {
+    const handleSignUp = async (e) => {
         e.preventDefault();
-        // Perform sign-up logic here (e.g., sending data to backend)
-        onSignIn(); // Update the authentication state in App.js
-        navigate('/questions'); // Redirect to questions page
+
+        try {
+            // Send sign-up data to the backend
+            const res = await axios.post('http://localhost:5000/api/auth/register', {
+                firstName,
+                lastName,
+                dob,
+                email,
+                password,
+            });
+
+            // On successful sign-up, sign in the user automatically
+            if (res.data && res.data.token) {
+                onSignIn(res.data.token, res.data.user);
+                navigate('/questions'); // Redirect to questions page
+            } else {
+                alert('Sign up failed: Invalid response from server');
+            }
+        } catch (err) {
+            console.error('Error during sign up:', err.message);
+            alert('Sign up failed: ' + (err.response?.data?.msg || err.message));
+        }
     };
 
     return (

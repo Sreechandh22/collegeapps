@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
 import HomePage from './components/HomePage';
 import SignUp from './components/SignUp';
 import SignIn from './components/SignIn';
 import QuestionsPage from './components/QuestionsPage';
 import Navbar from './components/Navbar';
+import PrivateRoute from './components/PrivateRoute'; // Import PrivateRoute
 import './styles/styles.css';
 
 function App() {
@@ -55,9 +56,16 @@ function App() {
                 />
                 <Routes>
                     <Route path="/" element={<HomePage isAuthenticated={isAuthenticated} />} />
-                    <Route path="/signup" element={<SignUp onSignIn={handleSignIn} />} />
-                    <Route path="/signin" element={<SignIn onSignIn={handleSignIn} />} />
-                    {isAuthenticated && <Route path="/questions" element={<QuestionsPage />} />}
+                    <Route path="/signup" element={isAuthenticated ? <Navigate to="/" /> : <SignUp onSignIn={handleSignIn} />} />
+                    <Route path="/signin" element={isAuthenticated ? <Navigate to="/" /> : <SignIn onSignIn={handleSignIn} />} />
+                    <Route
+                        path="/questions"
+                        element={
+                            <PrivateRoute isAuthenticated={isAuthenticated}>
+                                <QuestionsPage />
+                            </PrivateRoute>
+                        }
+                    />
                 </Routes>
             </Router>
         </div>
