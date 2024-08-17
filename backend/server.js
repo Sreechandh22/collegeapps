@@ -1,7 +1,10 @@
+// backend/server.js
+
 const express = require('express');
 const mongoose = require('mongoose');
 const cors = require('cors');
 const authRoutes = require('./routes/auth');
+const collegeRoutes = require('./routes/colleges');
 const app = express();
 
 // Middleware
@@ -16,6 +19,7 @@ mongoose.connect('mongodb://localhost:27017/college-matcher', {
 
 // Routes
 app.use('/api/auth', authRoutes);
+app.use('/api/colleges', collegeRoutes);
 
 // Basic route
 app.get('/', (req, res) => {
